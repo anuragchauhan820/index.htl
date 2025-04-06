@@ -2,21 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel</title>
+  <title>AnuragKart Admin Panel</title>
   <style>
-    body { font-family: Arial; background: #f4f4f4; padding: 40px; }
-    .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h1 { text-align: center; }
-    .btn { display: inline-block; margin: 10px 0; padding: 10px 15px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f6f6f6;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin-bottom: 30px;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      background: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: white;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-left: 4px solid #007BFF;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Admin Panel</h1>
-    <p>Welcome to AnuragKart Admin Dashboard</p>
-    <button class="btn">View Products</button>
-    <button class="btn">Add Product</button>
-    <button class="btn">Logout</button>
-  </div>
+
+  <h1>🛒 AnuragKart Admin Panel</h1>
+
+  <form id="productForm">
+    <input type="text" id="productName" placeholder="Product Name" required>
+    <input type="number" id="productPrice" placeholder="Product Price (₹)" required>
+    <button type="submit">Add Product</button>
+  </form>
+
+  <h2>📦 Product List</h2>
+  <ul id="productList"></ul>
+
+  <script>
+    const form = document.getElementById('productForm');
+    const productList = document.getElementById('productList');
+
+    // Load products from localStorage on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      products.forEach(addProductToUI);
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('productName').value.trim();
+      const price = document.getElementById('productPrice').value.trim();
+
+      if (name && price) {
+        const product = { name, price };
+        saveProduct(product);
+        addProductToUI(product);
+        form.reset();
+      }
+    });
+
+    function saveProduct(product) {
+      let products = JSON.parse(localStorage.getItem('products')) || [];
+      products.push(product);
+      localStorage.setItem('products', JSON.stringify(products));
+    }
+
+    function addProductToUI(product) {
+      const li = document.createElement('li');
+      li.textContent = `${product.name} — ₹${product.price}`;
+      productList.appendChild(li);
+    }
+  </script>
+
 </body>
 </html>
